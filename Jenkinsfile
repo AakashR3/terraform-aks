@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'linux'}
+  agent { label "jnlp-agent"}
   options {
     skipDefaultCheckout(true)
   }
