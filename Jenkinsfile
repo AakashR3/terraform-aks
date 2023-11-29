@@ -1,29 +1,34 @@
 pipeline {
-  agent { label "jnlp-agent"}
-  options {
-    skipDefaultCheckout(true)
-  }
-  stages{
-    stage('clean workspace') {
-      steps {
-        cleanWs()
-      }
+    agent { label "jnlp-agent" }
+    options {
+        skipDefaultCheckout(true)
     }
-    stage('checkout') {
-      steps {
-        checkout scm
-      }
+    stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('terraform') {
+            steps {
+                script {
+                    // Assuming 'terraform' executable is in the PATH
+                    sh 'terraform init'
+                    sh 'terraform plan'
+                    // Uncomment the line below for apply (use with caution)
+                    // sh 'terraform apply -auto-approve -no-color'
+                }
+            }
+        }
     }
-    stage('terraform') {
-      steps {
-        //sh './terraformw apply -auto-approve -no-color'
-        sh './terraform plan'
-      }
+    post {
+        always {
+            cleanWs()
+        }
     }
-  }
-  post {
-    always {
-      cleanWs()
-    }
-  }
 }
