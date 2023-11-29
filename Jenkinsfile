@@ -14,6 +14,15 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Install Terraform') {
+            steps {
+                // Install the specified version of Terraform
+                script {
+                    def tfHome = tool name: "Terraform${TF_VERSION}", type: 'hudson.plugins.terraform.TerraformToolInstallation'
+                    env.PATH = "${tfHome}/bin:${env.PATH}"
+                }
+            }
+        }
         stage('terraform') {
             steps {
                 script {
